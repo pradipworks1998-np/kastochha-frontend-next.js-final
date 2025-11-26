@@ -1,0 +1,7 @@
+{
+  "name": "II Copy of Next.js KastoChha App",
+  "description": "AI-powered search frontend for local business insights.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
