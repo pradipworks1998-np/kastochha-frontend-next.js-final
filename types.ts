@@ -31,7 +31,7 @@ export interface Offer {
   is_active: boolean;
 }
 
-export interface SpecialUpdates {
+export interface Special_Updates {
   id: string;
   item_id: string;
   title: string;
@@ -45,7 +45,7 @@ export interface SearchResponse {
   location?: string;
   banner?: Banner;
   offer?: Offer | null; // matches Home.tsx usage
-  special_update?: SpecialUpdates | null;
+  special_update?: Special_Updates | null;
   sources?: Source[];
 }
 
