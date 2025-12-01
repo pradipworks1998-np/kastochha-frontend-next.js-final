@@ -1,65 +1,62 @@
-// types.ts
-export interface SearchResponse {
-  scenario?: string;
-  answer: string;
-  sources?: Source[];
-  offer?: PromoItem;
-  special_update?: PromoItem;
-  ad?: AdBanner;
-  banner?: AdBanner;
-  location?: string;
-}
-
 export interface Source {
+  maps?: {
+    uri: string;
+    title: string;
+    placeId?: string;
+  };
   web?: {
     uri: string;
     title: string;
   };
-  maps?: {
-    uri: string;
-    title: string;
-    placeId: string;
-  };
   retrievedContext?: {
     uri: string;
     title: string;
-    text?: string;
+    text: string;
   };
 }
 
-export interface PromoItem {
-  title: string;
-  url: string;
-}
-
-export interface AdBanner {
+export interface Banner {
   id: string;
   item_id: string;
-  category?: string | null;
   image_url: string;
   link_url: string;
   is_active: boolean;
-  priority?: number | null;
-  created_at?: string | null;
-  updated_at?: string | null;
-  trigger_terms?: string[] | null;
-  max_impressions?: number | null;
-  displayed_count: number;
-  rotation_weight: number;
-  start_date?: string | null;
-  end_date?: string | null;
-  selection_rank?: number | null;
+}
+
+export interface Offer {
+  id: string;
+  item_id: string;
+  title: string;
+  link_url: string;
+  is_active: boolean;
+}
+
+export interface SpecialUpdate {
+  id: string;
+  item_id: string;
+  title: string;
+  link_url: string;
+  is_active: boolean;
+}
+
+export interface SearchResponse {
+  scenario: string;
+  answer: string;
+  location?: string;
+  banner?: Banner;
+  offer?: Offer | null; // matches Home.tsx usage
+  special_update?: SpecialUpdate | null;
+  sources?: Source[];
 }
 
 export enum FetchStatus {
-  IDLE = "IDLE",
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
+  IDLE = 'IDLE',
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  ERROR = 'ERROR',
 }
 
 export enum LanguageMode {
-  DEFAULT = "DEFAULT",
-  NEPALI = "NEPALI",
-  ENGLISH = "ENGLISH",
+  DEFAULT = 'DEFAULT',
+  NEPALI = 'NEPALI',
 }

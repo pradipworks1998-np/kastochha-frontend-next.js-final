@@ -4,10 +4,10 @@ import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { PromoCard } from '../components/PromoCard';
 import { SourceList } from '../components/SourceList';
-import { Typewriter } from '../components/Typewriter';
 import { performSearch } from '../services/api';
-import { SearchResponse, FetchStatus, LanguageMode } from '../types';
-import { AlertCircle, MapPin, ExternalLink } from 'lucide-react';
+import { SearchResponse, FetchStatus, LanguageMode, Offer } from '../types';
+import { AlertCircle, MapPin } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -30,6 +30,12 @@ export default function Home() {
 
     try {
       const result = await performSearch({ query, languageMode: lang, location });
+
+      // Transform offers array to single offer for PromoCard rendering
+      if ((result as any).offers && (result as any).offers.length > 0) {
+        result.offer = (result as any).offers[0] as Offer;
+      }
+
       setData(result);
       setStatus(FetchStatus.SUCCESS);
     } catch (err) {
@@ -79,7 +85,7 @@ export default function Home() {
             {status === FetchStatus.SUCCESS && data && (
               <div className="mt-8 space-y-6">
 
-                {/* Banner / Ad */}
+                {/* Banner */}
                 {data.banner && data.banner.is_active && (
                   <a
                     href={data.banner.link_url}
@@ -87,7 +93,11 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="group relative block w-full h-48 sm:h-64 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300"
                   >
-                    <img src={data.banner.image_url} alt="Banner" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <img
+                      src={data.banner.image_url}
+                      alt="Banner"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                   </a>
                 )}
@@ -102,18 +112,16 @@ export default function Home() {
                       </div>
                     </div>
                   )}
-                  <div className="p-6 sm:p-8">
-                    <div className="prose prose-slate max-w-none text-lg leading-relaxed text-slate-800">
-                      <Typewriter text={data.answer} />
-                    </div>
+                  <div className="p-6 sm:p-8 prose prose-slate max-w-none text-lg leading-relaxed text-slate-800">
+                    <ReactMarkdown>{data.answer}</ReactMarkdown>
                   </div>
                 </div>
 
                 {/* Offers / Special Updates */}
                 {(data.offer || data.special_update) && (
                   <div className="grid gap-4 sm:grid-cols-2">
-                    {data.offer && <PromoCard type="offer" title={data.offer.title} url={data.offer.url} />}
-                    {data.special_update && <PromoCard type="update" title={data.special_update.title} url={data.special_update.url} />}
+                    {data.offer && <PromoCard type="offer" title={data.offer.title} url={data.offer.link_url} />}
+                    {data.special_update && <PromoCard type="update" title={data.special_update.title} url={data.special_update.link_url} />}
                   </div>
                 )}
 
