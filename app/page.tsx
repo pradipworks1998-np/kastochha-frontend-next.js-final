@@ -78,20 +78,21 @@ export default function Home() {
 
             {status === FetchStatus.SUCCESS && data && (
               <div className="mt-8 space-y-6">
-                {data.ad && (
-                  <a href={data.ad.url} target="_blank" rel="noopener noreferrer"
-                     className="group relative block w-full h-48 sm:h-64 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300">
-                    <div className="absolute top-3 right-3 z-10 bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm flex items-center gap-1">
-                      Sponsored <ExternalLink size={8} />
-                    </div>
-                    <img src={data.ad.imageUrl} alt="Sponsored" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+
+                {/* Banner / Ad */}
+                {data.banner && data.banner.is_active && (
+                  <a
+                    href={data.banner.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative block w-full h-48 sm:h-64 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <img src={data.banner.image_url} alt="Banner" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                    <div className="absolute bottom-3 left-4 text-white text-xs font-medium opacity-90">
-                      Answer Partner
-                    </div>
                   </a>
                 )}
 
+                {/* Answer */}
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                   {data.location && (
                     <div className="px-6 py-3 border-b border-slate-100 flex justify-end items-center bg-slate-50/50">
@@ -108,6 +109,7 @@ export default function Home() {
                   </div>
                 </div>
 
+                {/* Offers / Special Updates */}
                 {(data.offer || data.special_update) && (
                   <div className="grid gap-4 sm:grid-cols-2">
                     {data.offer && <PromoCard type="offer" title={data.offer.title} url={data.offer.url} />}
@@ -115,7 +117,9 @@ export default function Home() {
                   </div>
                 )}
 
-              <SourceList sources={data.sources ?? []} />
+                {/* Sources */}
+                <SourceList sources={data.sources ?? []} />
+
               </div>
             )}
           </div>
