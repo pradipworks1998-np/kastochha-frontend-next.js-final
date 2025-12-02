@@ -43,10 +43,10 @@ export interface SearchResponse {
   scenario: string;
   answer: string;
   location?: string;
-  banner?: Banner;
-  offer?: Offer | null; // matches Home.tsx usage
-  special_update?: Special_Updates | null;
-  sources?: Source[];
+  banner?: Banner | null;
+  offer?: Offer | null;
+  special_update?: Special_Updates | null; // single object
+  sources?: Source[]; // strictly Source[]
 }
 
 export enum FetchStatus {

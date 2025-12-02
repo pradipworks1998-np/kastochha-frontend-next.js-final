@@ -1,17 +1,18 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { PromoCard } from '../components/PromoCard';
 import { SourceList } from '../components/SourceList';
 import { performSearch } from '../services/api';
-import { SearchResponse, FetchStatus, LanguageMode, Offer } from '../types';
+import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
 import { AlertCircle, MapPin } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
   const [data, setData] = useState<SearchResponse | null>(null);
+  const [displayedAnswer, setDisplayedAnswer] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [inputQuery, setInputQuery] = useState('');
   const [lastLang, setLastLang] = useState<LanguageMode>(LanguageMode.DEFAULT);
@@ -31,9 +32,24 @@ export default function Home() {
     try {
       const result = await performSearch({ query, languageMode: lang, location });
 
-      // Transform offers array to single offer for PromoCard rendering
+      // Transform offers array to single offer
       if ((result as any).offers && (result as any).offers.length > 0) {
         result.offer = (result as any).offers[0] as Offer;
+      }
+
+      // Transform special_updates array to single special_update
+      if ((result as any).special_updates && (result as any).special_updates.length > 0) {
+        result.special_update = (result as any).special_updates[0] as Special_Updates;
+      }
+
+      // Normalize sources
+      if ((result as any).sources && Array.isArray((result as any).sources)) {
+        const normalizedSources = (result as any).sources.map((s: any) => ({
+          maps: s.maps,
+          web: s.web,
+          retrievedContext: s.retrievedContext,
+        }));
+        result.sources = normalizedSources;
       }
 
       setData(result);
@@ -51,7 +67,22 @@ export default function Home() {
     setData(null);
     setError(null);
     setInputQuery('');
+    setDisplayedAnswer('');
   };
+
+  // Typewriter effect
+  useEffect(() => {
+    if (data?.answer) {
+      setDisplayedAnswer('');
+      let index = 0;
+      const interval = setInterval(() => {
+        setDisplayedAnswer(prev => prev + data.answer[index]);
+        index++;
+        if (index >= data.answer.length) clearInterval(interval);
+      }, 15); // Adjust speed here (ms per character)
+      return () => clearInterval(interval);
+    }
+  }, [data?.answer]);
 
   const isIdle = status === FetchStatus.IDLE;
 
@@ -113,7 +144,7 @@ export default function Home() {
                     </div>
                   )}
                   <div className="p-6 sm:p-8 prose prose-slate max-w-none text-lg leading-relaxed text-slate-800">
-                    <ReactMarkdown>{data.answer}</ReactMarkdown>
+                    <ReactMarkdown>{displayedAnswer}</ReactMarkdown>
                   </div>
                 </div>
 
