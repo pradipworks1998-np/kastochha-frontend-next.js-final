@@ -6,8 +6,8 @@ import { PromoCard } from '../components/PromoCard';
 import { SourceList } from '../components/SourceList';
 import { performSearch } from '../services/api';
 import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
-import { AlertCircle, MapPin } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import ErrorMessage from '../components/ErrorMessage';
+import { ResultsWrapper } from '../components/ResultsWrapper';
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -32,24 +32,20 @@ export default function Home() {
     try {
       const result = await performSearch({ query, languageMode: lang, location });
 
-      // Transform offers array to single offer
-      if ((result as any).offers && (result as any).offers.length > 0) {
+      if ((result as any).offers?.length) {
         result.offer = (result as any).offers[0] as Offer;
       }
 
-      // Transform special_updates array to single special_update
-      if ((result as any).special_updates && (result as any).special_updates.length > 0) {
+      if ((result as any).special_updates?.length) {
         result.special_update = (result as any).special_updates[0] as Special_Updates;
       }
 
-      // Normalize sources
-      if ((result as any).sources && Array.isArray((result as any).sources)) {
-        const normalizedSources = (result as any).sources.map((s: any) => ({
+      if (Array.isArray((result as any).sources)) {
+        result.sources = (result as any).sources.map((s: any) => ({
           maps: s.maps,
           web: s.web,
           retrievedContext: s.retrievedContext,
         }));
-        result.sources = normalizedSources;
       }
 
       setData(result);
@@ -70,7 +66,6 @@ export default function Home() {
     setDisplayedAnswer('');
   };
 
-  // Typewriter effect
   useEffect(() => {
     if (data?.answer) {
       setDisplayedAnswer('');
@@ -79,7 +74,7 @@ export default function Home() {
         setDisplayedAnswer(prev => prev + data.answer[index]);
         index++;
         if (index >= data.answer.length) clearInterval(interval);
-      }, 15); // Adjust speed here (ms per character)
+      }, 15);
       return () => clearInterval(interval);
     }
   }, [data?.answer]);
@@ -91,75 +86,23 @@ export default function Home() {
       <main className="flex-grow flex flex-col px-4 relative w-full max-w-5xl mx-auto">
         <div className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'}`}>
           <Header compact={!isIdle} resetSearch={handleReset} />
-          <div className="w-full z-20">
-            <SearchBar
-              onSearch={handleSearch}
-              onClear={handleReset}
-              isLoading={status === FetchStatus.LOADING}
-              query={inputQuery}
-              onQueryChange={setInputQuery}
-              initialLang={lastLang}
-              compact={!isIdle}
-            />
-          </div>
+          <SearchBar
+            onSearch={handleSearch}
+            onClear={handleReset}
+            isLoading={status === FetchStatus.LOADING}
+            query={inputQuery}
+            onQueryChange={setInputQuery}
+            initialLang={lastLang}
+            compact={!isIdle}
+          />
         </div>
 
         {!isIdle && (
           <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
-            {status === FetchStatus.ERROR && (
-              <div className="mt-12 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center justify-center text-red-600 gap-2">
-                <AlertCircle size={20} />
-                <span>{error}</span>
-              </div>
-            )}
+            {status === FetchStatus.ERROR && <ErrorMessage message={error ?? ''} />}
 
             {status === FetchStatus.SUCCESS && data && (
-              <div className="mt-8 space-y-6">
-
-                {/* Banner */}
-                {data.banner && data.banner.is_active && (
-                  <a
-                    href={data.banner.link_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative block w-full h-48 sm:h-64 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300"
-                  >
-                    <img
-                      src={data.banner.image_url}
-                      alt="Banner"
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
-                  </a>
-                )}
-
-                {/* Answer */}
-                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                  {data.location && (
-                    <div className="px-6 py-3 border-b border-slate-100 flex justify-end items-center bg-slate-50/50">
-                      <div className="flex items-center gap-1 text-slate-500 text-sm bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm">
-                        <MapPin size={14} />
-                        <span className="truncate max-w-[150px]">{data.location}</span>
-                      </div>
-                    </div>
-                  )}
-                  <div className="p-6 sm:p-8 prose prose-slate max-w-none text-lg leading-relaxed text-slate-800">
-                    <ReactMarkdown>{displayedAnswer}</ReactMarkdown>
-                  </div>
-                </div>
-
-                {/* Offers / Special Updates */}
-                {(data.offer || data.special_update) && (
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {data.offer && <PromoCard type="offer" title={data.offer.title} url={data.offer.link_url} />}
-                    {data.special_update && <PromoCard type="update" title={data.special_update.title} url={data.special_update.link_url} />}
-                  </div>
-                )}
-
-                {/* Sources */}
-                <SourceList sources={data.sources ?? []} />
-
-              </div>
+              <ResultsWrapper data={data} displayedAnswer={displayedAnswer} />
             )}
           </div>
         )}
