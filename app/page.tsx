@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
-import { PromoCard } from '../components/PromoCard';
-import { SourceList } from '../components/SourceList';
 import { performSearch } from '../services/api';
 import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
 import ErrorMessage from '../components/ErrorMessage';
 import { ResultsWrapper } from '../components/ResultsWrapper';
+import { Footer } from '../components/Footer';
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -82,8 +81,9 @@ export default function Home() {
   const isIdle = status === FetchStatus.IDLE;
 
   return (
-    <div className="flex flex-col h-screen bg-[#f8fafc] text-slate-900 font-sans overflow-y-auto scroll-smooth">
-      <main className="flex-grow flex flex-col px-4 relative w-full max-w-5xl mx-auto">
+    <div className="flex flex-col min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
+      <main className="flex-grow flex flex-col px-4 pb-50 relative w-full max-w-5xl mx-auto">
+        {/* pb-16 here allows the footer to sit slightly higher; adjust as needed */}
         <div className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'}`}>
           <Header compact={!isIdle} resetSearch={handleReset} />
           <SearchBar
@@ -107,6 +107,9 @@ export default function Home() {
           </div>
         )}
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
