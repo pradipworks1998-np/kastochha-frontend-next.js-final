@@ -78,7 +78,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     ? ''
     : query
       ? ''
-      : `Ask about ${emojiPlaceholder || FIRST_EMOJI}`;
+      : `Ask About ${emojiPlaceholder || FIRST_EMOJI}....`;
 
   return (
     <form
@@ -124,7 +124,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               ml-2 py-2
               placeholder-slate-600
               text-sm sm:text-base
-              ${focused ? 'text-white' : 'text-slate-800 placeholder-slate-400'}
+              ${focused ? 'text-white' : 'text-slate-800 placeholder-slate-600'}
             `}
             disabled={isLoading}
           />

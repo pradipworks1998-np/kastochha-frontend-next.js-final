@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { performSearch } from '../services/api';
-import { SearchResponse, FetchStatus, LanguageMode } from '../types';
+import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
 import ErrorMessage from '../components/ErrorMessage';
 import { ResultsWrapper } from '../components/ResultsWrapper';
 import { Footer } from '../components/Footer';
@@ -30,6 +30,25 @@ export default function Home() {
 
     try {
       const result = await performSearch({ query, languageMode: lang, location });
+
+      // ✅ FIX: Restore PromoCard rendering logic (same as original working version)
+      if ((result as any).offers?.length) {
+        result.offer = (result as any).offers[0] as Offer;
+      }
+
+      if ((result as any).special_updates?.length) {
+        result.special_update = (result as any).special_updates[0] as Special_Updates;
+      }
+
+      if (Array.isArray((result as any).sources)) {
+        result.sources = (result as any).sources.map((s: any) => ({
+          maps: s.maps,
+          web: s.web,
+          retrievedContext: s.retrievedContext,
+        }));
+      }
+      // ✅ End of PromoCard fix — nothing else changed
+
       setData(result as SearchResponse);
       setStatus(FetchStatus.SUCCESS);
     } catch (err) {
@@ -66,12 +85,15 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       <main className="flex-grow flex flex-col px-4 pb-50 relative w-full max-w-5xl mx-auto">
-        <div className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'}`}>
-          {/* Pass loading state to Header */}
+        <div
+          className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${
+            isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'
+          }`}
+        >
           <Header
             compact={!isIdle}
             resetSearch={handleReset}
-            isLoading={status === FetchStatus.LOADING} // <-- added
+            isLoading={status === FetchStatus.LOADING} // (kept from later version)
           />
 
           <SearchBar
