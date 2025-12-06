@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { FaInstagram, FaLinkedin, FaPinterest, FaYoutube, FaFacebookF } from 'react-icons/fa';
+import { FaInstagram, FaLinkedin, FaPinterest, FaYoutube, FaFacebookF, FaReddit } from 'react-icons/fa';
 import { SiX, SiTiktok, SiQuora } from 'react-icons/si';
 
 interface SocialLink {
@@ -12,14 +12,15 @@ interface SocialLink {
 
 export const Footer: React.FC = () => {
   const socialLinks: SocialLink[] = [
-    { name: 'X', url: 'https://x.com/YourProfile', icon: <SiX size={18} />, colorClass: 'hover:text-blue-500' },
-    { name: 'Facebook', url: 'https://facebook.com/YourProfile', icon: <FaFacebookF size={18} />, colorClass: 'hover:text-blue-600' },
-    { name: 'Instagram', url: 'https://instagram.com/YourProfile', icon: <FaInstagram size={18} />, colorClass: 'hover:text-pink-500' },
-    { name: 'LinkedIn', url: 'https://linkedin.com/in/YourProfile', icon: <FaLinkedin size={18} />, colorClass: 'hover:text-blue-700' },
-    { name: 'Pinterest', url: 'https://pinterest.com/YourProfile', icon: <FaPinterest size={18} />, colorClass: 'hover:text-red-600' },
-    { name: 'TikTok', url: 'https://tiktok.com/@YourProfile', icon: <SiTiktok size={18} />, colorClass: 'hover:text-black' },
-    { name: 'YouTube', url: 'https://youtube.com/YourChannel', icon: <FaYoutube size={18} />, colorClass: 'hover:text-red-500' },
-    { name: 'Quora', url: 'https://quora.com/profile/YourProfile', icon: <SiQuora size={18} />, colorClass: 'hover:text-red-700' },
+    { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61582470216854', icon: <FaFacebookF size={18} />, colorClass: 'hover:text-blue-600' },
+    { name: 'Instagram', url: 'https://www.instagram.com/kasto_chha/', icon: <FaInstagram size={18} />, colorClass: 'hover:text-pink-500' },
+    { name: 'TikTok', url: 'https://www.tiktok.com/@kasto_chha', icon: <SiTiktok size={18} />, colorClass: 'hover:text-black' },
+    { name: 'YouTube', url: 'https://www.youtube.com/@Kasto_Chha', icon: <FaYoutube size={18} />, colorClass: 'hover:text-red-500' },
+    { name: 'Reddit', url: 'https://reddit.com/r/KastoChha/', icon: <FaReddit size={20} />, colorClass: 'hover:text-orange-500' },
+    { name: 'Quora', url: 'https://kastochha.quora.com/', icon: <SiQuora size={16} />, colorClass: 'hover:text-red-700' },
+    { name: 'X', url: 'https://x.com/Kasto_chha', icon: <SiX size={18} />, colorClass: 'hover:text-blue-500' },
+    { name: 'Pinterest', url: 'https://www.pinterest.com/kastochhaofficial/', icon: <FaPinterest size={18} />, colorClass: 'hover:text-red-600' },
+    { name: 'LinkedIn', url: 'https://linkedin.com/YourPage', icon: <FaLinkedin size={18} />, colorClass: 'hover:text-blue-700' },
   ];
 
   return (

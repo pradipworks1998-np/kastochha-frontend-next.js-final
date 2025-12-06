@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { performSearch } from '../services/api';
-import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
+import { SearchResponse, FetchStatus, LanguageMode } from '../types';
 import ErrorMessage from '../components/ErrorMessage';
 import { ResultsWrapper } from '../components/ResultsWrapper';
 import { Footer } from '../components/Footer';
@@ -30,24 +30,7 @@ export default function Home() {
 
     try {
       const result = await performSearch({ query, languageMode: lang, location });
-
-      if ((result as any).offers?.length) {
-        result.offer = (result as any).offers[0] as Offer;
-      }
-
-      if ((result as any).special_updates?.length) {
-        result.special_update = (result as any).special_updates[0] as Special_Updates;
-      }
-
-      if (Array.isArray((result as any).sources)) {
-        result.sources = (result as any).sources.map((s: any) => ({
-          maps: s.maps,
-          web: s.web,
-          retrievedContext: s.retrievedContext,
-        }));
-      }
-
-      setData(result);
+      setData(result as SearchResponse);
       setStatus(FetchStatus.SUCCESS);
     } catch (err) {
       console.error('Search failed:', err);
@@ -83,9 +66,14 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
       <main className="flex-grow flex flex-col px-4 pb-50 relative w-full max-w-5xl mx-auto">
-        {/* pb-16 here allows the footer to sit slightly higher; adjust as needed */}
         <div className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'}`}>
-          <Header compact={!isIdle} resetSearch={handleReset} />
+          {/* Pass loading state to Header */}
+          <Header
+            compact={!isIdle}
+            resetSearch={handleReset}
+            isLoading={status === FetchStatus.LOADING} // <-- added
+          />
+
           <SearchBar
             onSearch={handleSearch}
             onClear={handleReset}
@@ -100,7 +88,6 @@ export default function Home() {
         {!isIdle && (
           <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
             {status === FetchStatus.ERROR && <ErrorMessage message={error ?? ''} />}
-
             {status === FetchStatus.SUCCESS && data && (
               <ResultsWrapper data={data} displayedAnswer={displayedAnswer} />
             )}
@@ -108,7 +95,6 @@ export default function Home() {
         )}
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
