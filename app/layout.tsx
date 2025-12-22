@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "KastoChha - AI Search",
+  title: "KastoChha - Nepali Answer Engine",
   description: "AI-powered search frontend for local business insights.",
 };
 
@@ -16,7 +16,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased bg-[#f8fafc]`}>{children}</body>
+      <body className={`${inter.variable} font-sans antialiased min-h-screen`}>{children}</body>
     </html>
   );
 }
+

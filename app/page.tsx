@@ -7,6 +7,8 @@ import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } fro
 import ErrorMessage from '../components/ErrorMessage';
 import { ResultsWrapper } from '../components/ResultsWrapper';
 import { Footer } from '../components/Footer';
+import DiscordButton from '../components/DiscordButton';
+
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -15,6 +17,29 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [inputQuery, setInputQuery] = useState('');
   const [lastLang, setLastLang] = useState<LanguageMode>(LanguageMode.DEFAULT);
+
+  // ✅ Placeholder prompts array
+  const placeholderPrompts = [
+    "Balen Ko Chasma 🕶️",
+    "Aaja Ko Rashifal ko list ♈︎",
+    "Kabaddi Film 🎬",
+    "Mahalxmisthaan ko Naan Pasal 🫓",
+    "Mero Ex 👧/👦",
+    "Rajesh Dai ko Haat 👊"
+  ];
+
+  const handlePromptClick = (prompt: string) => {
+    setInputQuery(prompt);
+    setStatus(FetchStatus.LOADING);
+
+    // Focus input so gradient behaves exactly like searchbar
+    const input = document.querySelector<HTMLInputElement>('input[type="text"]');
+    input?.focus();
+
+    setTimeout(() => {
+      handleSearch(prompt, lastLang);
+    }, 0);
+  };
 
   const handleSearch = async (query: string, lang: LanguageMode, location?: string) => {
     if (!query.trim()) {
@@ -26,12 +51,10 @@ export default function Home() {
     setStatus(FetchStatus.LOADING);
     setError(null);
     setLastLang(lang);
-    setInputQuery(query);
 
     try {
       const result = await performSearch({ query, languageMode: lang, location });
 
-      // ✅ FIX: Restore PromoCard rendering logic (same as original working version)
       if ((result as any).offers?.length) {
         result.offer = (result as any).offers[0] as Offer;
       }
@@ -47,7 +70,6 @@ export default function Home() {
           retrievedContext: s.retrievedContext,
         }));
       }
-      // ✅ End of PromoCard fix — nothing else changed
 
       setData(result as SearchResponse);
       setStatus(FetchStatus.SUCCESS);
@@ -83,8 +105,9 @@ export default function Home() {
   const isIdle = status === FetchStatus.IDLE;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f8fafc] text-slate-900 font-sans">
+    <div className="flex flex-col min-h-screen bg-transparent text-slate-900 font-sans">
       <main className="flex-grow flex flex-col px-4 pb-50 relative w-full max-w-5xl mx-auto">
+
         <div
           className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${
             isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'
@@ -93,7 +116,7 @@ export default function Home() {
           <Header
             compact={!isIdle}
             resetSearch={handleReset}
-            isLoading={status === FetchStatus.LOADING} // (kept from later version)
+            isLoading={status === FetchStatus.LOADING}
           />
 
           <SearchBar
@@ -105,6 +128,21 @@ export default function Home() {
             initialLang={lastLang}
             compact={!isIdle}
           />
+
+          {/* ✅ Placeholder buttons now disappear once search starts */}
+          {isIdle && (
+            <div className="mt-12 flex flex-wrap justify-center gap-3">
+              {placeholderPrompts.map((text) => (
+                <button
+                  key={text}
+                  onClick={() => handlePromptClick(text)}
+                  className="bg-white border border-gray-300 text-gray-800 px-5 py-2 rounded-full shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer"
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {!isIdle && (
@@ -118,6 +156,9 @@ export default function Home() {
       </main>
 
       <Footer />
+      <DiscordButton />
     </div>
   );
 }
+
+

@@ -38,10 +38,10 @@ export const Footer: React.FC = () => {
 
         {/* Left on desktop / Top on mobile: links */}
         <div className="order-1 sm:order-1 flex flex-wrap justify-center sm:justify-start gap-5 w-full sm:w-auto">
-          <a href="#" className="hover:underline transition">About</a>
-          <a href="#" className="hover:underline transition">Blogs</a>
-          <a href="#" className="hover:underline transition">Contact</a>
-          <a href="#" className="hover:underline transition">Privacy Policy</a>
+          <a href="/about" className="hover:underline transition">About</a>
+          <a href="blog" className="hover:underline transition">Blogs</a>
+          <a href="/contact" className="hover:underline transition">Contact</a>
+          <a href="/privacy-policy" className="hover:underline transition">Privacy Policy</a>
         </div>
 
         {/* Center on desktop / Middle on mobile: social icons */}
