@@ -1,77 +1,76 @@
 'use client';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
-interface TypewriterProps {
-  text: string;
-  speed?: number; // milliseconds per paragraph pause
-  className?: string;
-}
-
-export const Typewriter: React.FC<TypewriterProps> = ({ text, speed = 200, className }) => {
-  const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim() !== '');
-
-  const [completedParagraphs, setCompletedParagraphs] = useState<string[]>([]);
-  const [currentTypingText, setCurrentTypingText] = useState('');
-  const [currentParagraphIndex, setCurrentParagraphIndex] = useState(0);
-
-  // 👇 ADD THIS
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // 👇 Auto-scroll whenever text updates
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [completedParagraphs, currentTypingText]);
+export const Typewriter = ({ text, onComplete }: { text: string; onComplete?: () => void }) => {
+  const [currentText, setCurrentText] = useState('');
+  const [isDone, setIsDone] = useState(false);
+  const words = useMemo(() => text.split(' '), [text]);
+  const wordIndexRef = useRef(0);
 
   useEffect(() => {
-    setCompletedParagraphs([]);
-    setCurrentTypingText('');
-    setCurrentParagraphIndex(0);
+    if (currentText === text && text !== '') return;
 
-    if (paragraphs.length === 0) return;
-
-    let charIndex = 0;
-    let timeoutId: number | undefined;
-
-    const typeCharacter = () => {
-      const paragraph = paragraphs[currentParagraphIndex];
-      if (charIndex < paragraph.length) {
-        setCurrentTypingText(prev => prev + paragraph.charAt(charIndex));
-        charIndex++;
-        timeoutId = window.setTimeout(typeCharacter, 50);
+    wordIndexRef.current = 0;
+    setCurrentText('');
+    setIsDone(false);
+    
+    const interval = setInterval(() => {
+      if (wordIndexRef.current < words.length) {
+        setCurrentText(words.slice(0, wordIndexRef.current + 1).join(' '));
+        wordIndexRef.current++;
       } else {
-        setCompletedParagraphs(prev => [...prev, paragraph]);
-        setCurrentTypingText('');
-        charIndex = 0;
-        if (currentParagraphIndex + 1 < paragraphs.length) {
-          setCurrentParagraphIndex(prev => prev + 1);
-          timeoutId = window.setTimeout(typeCharacter, speed);
-        }
+        clearInterval(interval);
+        setIsDone(true);
+        if (onComplete) onComplete();
       }
-    };
+    }, 35);
 
-    typeCharacter();
-
-    return () => clearTimeout(timeoutId);
-  }, [text, speed, paragraphs]);
+    return () => clearInterval(interval);
+  }, [words, onComplete]); 
 
   return (
-    <div
-      className={`
-        typewriter-output
-        prose prose-slate
-        max-w-none text-lg leading-relaxed text-slate-800
-        [&>p]:mb-8 [&>p]:mt-0
-        ${className ?? ''}
-      `}
-    >
-      {paragraphs.map((p, idx) => (
-        <p key={idx}>
-          {completedParagraphs[idx] ?? (idx === currentParagraphIndex ? currentTypingText : '')}
-        </p>
-      ))}
-
-      {/* 👇 Auto-scroll anchor */}
-      <div ref={scrollRef} />
+    <div className="prose prose-slate max-w-none antialiased">
+      <ReactMarkdown 
+        remarkPlugins={[remarkGfm]}
+        components={{
+          // ✅ FIX 1: Paragraph Spacing & Line Height for Nepali Script
+          p: ({children}) => (
+            <p className="mb-8 last:mb-0 leading-[1.85] text-slate-700 text-lg font-medium whitespace-pre-wrap">
+              {children}
+            </p>
+          ),
+          // ✅ FIX 2: Style Section Headers (Matching the ### in your JSON)
+          h3: ({children}) => (
+            <h3 className="block mt-12 mb-6 text-2xl font-extrabold text-slate-900 tracking-tight border-l-4 border-[#4F93FF] pl-4 py-1 bg-blue-50/40 rounded-r-lg">
+              {children}
+            </h3>
+          ),
+          // ✅ FIX 3: Keep Bold Text (Hotel Names) Inline (Not as Blocks)
+          strong: ({children}) => (
+            <strong className="font-bold text-slate-900 border-b-2 border-blue-50 px-0.5">
+              {children}
+            </strong>
+          ),
+          // ✅ FIX 4: Clean List Layout
+          ul: ({children}) => (
+            <ul className="mb-8 space-y-4 list-disc list-inside text-slate-600">
+              {children}
+            </ul>
+          ),
+          li: ({children}) => (
+            <li className="leading-relaxed pl-2 text-slate-700">
+              {children}
+            </li>
+          ),
+        }}
+      >
+        {currentText}
+      </ReactMarkdown>
+      {!isDone && (
+        <span className="inline-block w-1.5 h-5 ml-1 bg-[#4F93FF] animate-pulse align-middle rounded-full" />
+      )}
     </div>
   );
 };

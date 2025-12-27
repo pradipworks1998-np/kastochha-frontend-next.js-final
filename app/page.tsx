@@ -8,7 +8,8 @@ import ErrorMessage from '../components/ErrorMessage';
 import { ResultsWrapper } from '../components/ResultsWrapper';
 import { Footer } from '../components/Footer';
 import DiscordButton from '../components/DiscordButton';
-
+// ✅ Import the Loading component (Dancing Habre)
+import Loading from './loading'; 
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -18,9 +19,8 @@ export default function Home() {
   const [inputQuery, setInputQuery] = useState('');
   const [lastLang, setLastLang] = useState<LanguageMode>(LanguageMode.DEFAULT);
 
-  // ✅ Placeholder prompts array
   const placeholderPrompts = [
-    "Balen Ko Chasma 🕶️",
+    "Balen Ko Chasma 😎",
     "Aaja Ko Rashifal ko list ♈︎",
     "Kabaddi Film 🎬",
     "Mahalxmisthaan ko Naan Pasal 🫓",
@@ -32,7 +32,6 @@ export default function Home() {
     setInputQuery(prompt);
     setStatus(FetchStatus.LOADING);
 
-    // Focus input so gradient behaves exactly like searchbar
     const input = document.querySelector<HTMLInputElement>('input[type="text"]');
     input?.focus();
 
@@ -91,14 +90,7 @@ export default function Home() {
 
   useEffect(() => {
     if (data?.answer) {
-      setDisplayedAnswer('');
-      let index = 0;
-      const interval = setInterval(() => {
-        setDisplayedAnswer(prev => prev + data.answer[index]);
-        index++;
-        if (index >= data.answer.length) clearInterval(interval);
-      }, 15);
-      return () => clearInterval(interval);
+      setDisplayedAnswer(data.answer);
     }
   }, [data?.answer]);
 
@@ -129,7 +121,6 @@ export default function Home() {
             compact={!isIdle}
           />
 
-          {/* ✅ Placeholder buttons now disappear once search starts */}
           {isIdle && (
             <div className="mt-12 flex flex-wrap justify-center gap-3">
               {placeholderPrompts.map((text) => (
@@ -147,7 +138,17 @@ export default function Home() {
 
         {!isIdle && (
           <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
+            {/* ✅ Show Error if it exists */}
             {status === FetchStatus.ERROR && <ErrorMessage message={error ?? ''} />}
+            
+            {/* ✅ Show Dancing Habre only when Loading */}
+            {status === FetchStatus.LOADING && (
+              <div className="py-10">
+                <Loading />
+              </div>
+            )}
+
+            {/* ✅ Show Results when Success */}
             {status === FetchStatus.SUCCESS && data && (
               <ResultsWrapper data={data} displayedAnswer={displayedAnswer} />
             )}
@@ -160,5 +161,3 @@ export default function Home() {
     </div>
   );
 }
-
-
