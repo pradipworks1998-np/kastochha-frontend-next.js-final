@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link'; // ✅ ADD THIS IMPORT
 import { FaInstagram, FaLinkedin, FaPinterest, FaYoutube, FaFacebookF, FaReddit } from 'react-icons/fa';
 import { SiX, SiTiktok, SiQuora } from 'react-icons/si';
 
@@ -20,7 +21,7 @@ export const Footer: React.FC = () => {
     { name: 'Quora', url: 'https://kastochha.quora.com/', icon: <SiQuora size={16} />, colorClass: 'hover:text-red-700' },
     { name: 'X', url: 'https://x.com/Kasto_chha', icon: <SiX size={18} />, colorClass: 'hover:text-blue-500' },
     { name: 'Pinterest', url: 'https://www.pinterest.com/kastochhaofficial/', icon: <FaPinterest size={18} />, colorClass: 'hover:text-red-600' },
-    { name: 'LinkedIn', url: 'https://linkedin.com/YourPage', icon: <FaLinkedin size={18} />, colorClass: 'hover:text-blue-700' },
+    { name: 'LinkedIn', url: 'https://linkedin.com/company/kastochha', icon: <FaLinkedin size={18} />, colorClass: 'hover:text-blue-700' },
   ];
 
   return (
@@ -38,10 +39,11 @@ export const Footer: React.FC = () => {
 
         {/* Left on desktop / Top on mobile: links */}
         <div className="order-1 sm:order-1 flex flex-wrap justify-center sm:justify-start gap-5 w-full sm:w-auto">
-          <a href="/about" className="hover:underline transition">About</a>
-          <a href="blog" className="hover:underline transition">Blogs</a>
-          <a href="/contact" className="hover:underline transition">Contact</a>
-          <a href="/privacy-policy" className="hover:underline transition">Privacy Policy</a>
+          {/* ✅ UPDATED TO LINK COMPONENTS FOR INSTANT SPEED */}
+          <Link href="/about" prefetch={true} className="hover:underline transition">About</Link>
+          <Link href="/blog" prefetch={true} className="hover:underline transition">Blogs</Link>
+          <Link href="/contact" prefetch={true} className="hover:underline transition">Contact</Link>
+          <Link href="/privacy-policy" prefetch={true} className="hover:underline transition">Privacy Policy</Link>
         </div>
 
         {/* Center on desktop / Middle on mobile: social icons */}

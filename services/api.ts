@@ -1,4 +1,4 @@
-// api.ts
+import { createClient } from '@supabase/supabase-js';
 import { SearchResponse } from "../types";
 
 export interface PerformSearchParams {
@@ -7,7 +7,12 @@ export interface PerformSearchParams {
   location?: string;
 }
 
-// Use environment variable directly
+// ✅ Initialize Supabase Client for Tracking
+const SUPABASE_URL = "https://auopgtcysaaexozjgcbh.supabase.co";
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string;
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 export const performSearch = async ({
@@ -15,24 +20,19 @@ export const performSearch = async ({
   languageMode = "DEFAULT",
   location,
 }: PerformSearchParams): Promise<SearchResponse> => {
-  console.log("Using API_URL:", API_URL); // should now show your real Supabase URL
-
   const res = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
     },
     body: JSON.stringify({ query, languageMode, location }),
   });
 
   if (!res.ok) {
     const errorBody = await res.json().catch(() => ({}));
-    throw new Error(
-      `Failed to fetch: ${res.status} ${JSON.stringify(errorBody)}`
-    );
+    throw new Error(`Failed to fetch: ${res.status} ${JSON.stringify(errorBody)}`);
   }
 
-  const data: SearchResponse = await res.json();
-  return data;
+  return await res.json();
 };

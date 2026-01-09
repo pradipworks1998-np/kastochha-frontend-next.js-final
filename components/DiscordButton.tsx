@@ -5,13 +5,13 @@ import React from 'react';
 const DiscordButton = () => {
   const handleClick = () => {
     // Replace with your Discord invite link
-    window.open('https://discord.gg/cYMHsgHV', '_blank');
+    window.open('https://discord.gg/H4jkBz9tg6', '_blank');
   };
 
   return (
     <button
       onClick={handleClick}
-      title="KastoChha Sanga Jodinuhos"
+      title="Join Our Community"
       style={{
         position: 'fixed',
         bottom: '62px',

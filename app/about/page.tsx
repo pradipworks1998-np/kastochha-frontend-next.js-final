@@ -24,7 +24,7 @@ export default function AboutPage() {
         <div
           className="relative w-full h-[25vh] md:h-[30vh] bg-cover rounded-xl overflow-hidden mx-auto shadow-lg"
           style={{
-            backgroundImage: "url('https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/sign/Banners/Banner_final_Gemini_Generated_Image_u7opv4u7opv4u7op.png?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNDVjMjM5MS0wZWRhLTRlNTgtYTA0Ni1iOWVlMTI2NTU1MDEiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCYW5uZXJzL0Jhbm5lcl9maW5hbF9HZW1pbmlfR2VuZXJhdGVkX0ltYWdlX3U3b3B2NHU3b3B2NHU3b3AucG5nIiwiaWF0IjoxNzY1ODkxMjU4LCJleHAiOjE3Njg0ODMyNTh9.5tM5Z5XVxtCYa1nLI1ZRYClJR4CslcrdAh30TjR9xDU')",
+            backgroundImage: "url('https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/Banner%20Image%20Final.jpg')",
             backgroundPosition: "center 15%",
             backgroundSize: "cover",
           }}

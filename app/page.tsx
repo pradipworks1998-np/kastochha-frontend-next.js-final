@@ -1,15 +1,32 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Header } from '../components/Header';
 import { SearchBar } from '../components/SearchBar';
 import { performSearch } from '../services/api';
 import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } from '../types';
-import ErrorMessage from '../components/ErrorMessage';
-import { ResultsWrapper } from '../components/ResultsWrapper';
 import { Footer } from '../components/Footer';
 import DiscordButton from '../components/DiscordButton';
-// ✅ Import the Loading component (Dancing Habre)
-import Loading from './loading'; 
+
+// --- DYNAMIC IMPORTS (The TBT Killers) ---
+
+// 1. HabreLoader: Only loads when status is LOADING
+const HabreLoader = dynamic(() => import('../components/HabreLoader').then(mod => mod.HabreLoader), {
+  ssr: false,
+});
+
+// 2. ResultsWrapper: Only loads when status is SUCCESS
+// We add a simple skeleton loader so the jump isn't jarring
+const ResultsWrapper = dynamic(() => import('../components/ResultsWrapper').then(mod => mod.ResultsWrapper), {
+  ssr: false,
+  loading: () => <div className="h-64 w-full animate-pulse bg-slate-50 rounded-3xl mt-10" />
+});
+
+// 3. ErrorMessage: Only loads if an error actually happens
+const ErrorMessage = dynamic(() => import('../components/ErrorMessage'), { 
+  ssr: false 
+});
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -31,7 +48,6 @@ export default function Home() {
   const handlePromptClick = (prompt: string) => {
     setInputQuery(prompt);
     setStatus(FetchStatus.LOADING);
-
     const input = document.querySelector<HTMLInputElement>('input[type="text"]');
     input?.focus();
 
@@ -57,11 +73,9 @@ export default function Home() {
       if ((result as any).offers?.length) {
         result.offer = (result as any).offers[0] as Offer;
       }
-
       if ((result as any).special_updates?.length) {
         result.special_update = (result as any).special_updates[0] as Special_Updates;
       }
-
       if (Array.isArray((result as any).sources)) {
         result.sources = (result as any).sources.map((s: any) => ({
           maps: s.maps,
@@ -136,19 +150,21 @@ export default function Home() {
           )}
         </div>
 
+        {/* --- CONDITIONAL RESULTS SECTION --- */}
         {!isIdle && (
           <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
-            {/* ✅ Show Error if it exists */}
+            
+            {/* 1. Error State */}
             {status === FetchStatus.ERROR && <ErrorMessage message={error ?? ''} />}
             
-            {/* ✅ Show Dancing Habre only when Loading */}
+            {/* 2. Loading State (Dancing Habre) */}
             {status === FetchStatus.LOADING && (
               <div className="py-10">
-                <Loading />
+                <HabreLoader />
               </div>
             )}
 
-            {/* ✅ Show Results when Success */}
+            {/* 3. Success State (AI Results) */}
             {status === FetchStatus.SUCCESS && data && (
               <ResultsWrapper data={data} displayedAnswer={displayedAnswer} />
             )}

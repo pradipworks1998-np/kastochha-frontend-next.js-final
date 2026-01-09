@@ -51,10 +51,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const [locationError, setLocationError] = useState(false);
 
   const handleLocationToggle = () => {
-    if (locationCoords) return setLocationCoords(null), setLocationError(false);
+    if (locationCoords) {
+      setLocationCoords(null);
+      setLocationError(false);
+      return;
+    }
     setIsLocating(true);
     setLocationError(false);
-    if (!navigator.geolocation) return setLocationError(true), setIsLocating(false);
+    if (!navigator.geolocation) {
+      setLocationError(true);
+      setIsLocating(false);
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -62,46 +70,42 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         setLocationCoords(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
         setIsLocating(false);
       },
-      () => { setLocationError(true); setIsLocating(false); }
+      () => {
+        setLocationError(true);
+        setIsLocating(false);
+      }
     );
   };
 
-  const handleClear = () => { onQueryChange(''); onClear?.(); inputRef.current?.focus(); };
+  const handleClear = () => {
+    onQueryChange('');
+    onClear?.();
+    inputRef.current?.focus();
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (query.trim()) onSearch(query, lang, locationCoords || undefined);
   };
 
-  // Placeholder logic
-  const placeholderText = focused
-    ? ''
-    : query
-      ? ''
-      : `Ask About ${emojiPlaceholder || FIRST_EMOJI}....`;
+  const placeholderText =
+    focused || query ? '' : `Ask About ${emojiPlaceholder || FIRST_EMOJI}....`;
 
   return (
     <form
       onSubmit={handleSubmit}
       className={`w-full mx-auto transition-all duration-500 ${compact ? 'max-w-4xl' : 'max-w-3xl'}`}
     >
-      {/* Gradient border ALWAYS visible (original look) */}
-      <div
-        className="rounded-full p-[1px]"
-        style={{ background: 'linear-gradient(90deg, #FF4B4B, #4F93FF)' }}
-      >
-        {/* Full gradient when focused */}
+      <div className="rounded-full p-[1px]" style={{ background: 'linear-gradient(90deg, #FF4B4B, #4F93FF)' }}>
         <div
           className={`flex items-center gap-2 rounded-full shadow-sm w-full transition-all duration-300
             ${compact ? 'rounded-2xl p-1.5' : 'rounded-full p-2 pl-6'}
-            ${focused
+            ${focused || isLoading
               ? 'bg-gradient-to-r from-[#FF4B4B] to-[#4F93FF] text-white'
               : 'bg-white text-slate-800'
             }
           `}
         >
-
-          {/* Search Icon / Loader */}
           <div className={`${compact ? 'pl-3' : ''} ${focused ? 'text-white' : 'text-slate-400'}`}>
             {isLoading ? (
               <Loader2 className={`animate-spin ${focused ? 'text-white' : ''}`} size={20} />
@@ -110,7 +114,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             )}
           </div>
 
-          {/* Input */}
           <input
             ref={inputRef}
             type="text"
@@ -120,20 +123,19 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             className={`
-              flex-1 min-w-0 bg-transparent outline-none
-              ml-2 py-2
-              placeholder-slate-600
+              flex-1 min-w-0 bg-transparent outline-none ml-2 py-2
               text-sm sm:text-base
               ${focused ? 'text-white' : 'text-slate-800 placeholder-slate-600'}
             `}
             disabled={isLoading}
+            aria-label="Search input"
           />
 
-          {/* Clear Button */}
           {query && !isLoading && (
             <button
               type="button"
               onClick={handleClear}
+              aria-label="Clear search"
               className={`p-1.5 rounded-full transition-colors mr-1
                 ${focused
                   ? 'text-white hover:bg-white/20'
@@ -145,10 +147,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             </button>
           )}
 
-          {/* Right Controls */}
           <div
-            className={`
-              flex items-center gap-1 sm:gap-2 rounded-full p-1 border
+            className={`flex items-center gap-1 sm:gap-2 rounded-full p-1 border
               ${focused
                 ? 'bg-white/20 border-white/30 text-white'
                 : 'bg-slate-50 border-slate-100 text-slate-600'
@@ -157,8 +157,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           >
             <button
               type="button"
-              onClick={() => { if (!isLoading) handleLocationToggle(); }} // <-- block click while loading
-              className={`p-1 sm:p-2 rounded-full transition-all duration-200 relative ${isLoading ? 'cursor-not-allowed' : ''}`} // <-- cursor blocked while loading
+              onClick={() => { if (!isLoading) handleLocationToggle(); }}
+              aria-label={locationCoords ? 'Remove location filter' : 'Use current location'}
+              className={`p-1 sm:p-2 rounded-full transition-all duration-200 relative ${isLoading ? 'cursor-not-allowed' : ''}`}
             >
               {isLocating ? (
                 <Loader2 size={18} className="animate-spin" />
@@ -170,7 +171,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
               )}
             </button>
 
-            <div className={`hidden sm:block w-px h-5 ${focused ? 'bg-white/40' : 'bg-slate-200'}`}></div>
+            <div className={`hidden sm:block w-px h-5 ${focused ? 'bg-white/40' : 'bg-slate-200'}`} />
 
             <div className="flex items-center gap-1 px-2">
               <Globe size={14} className={focused ? 'text-white' : 'text-slate-400'} />
@@ -182,6 +183,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <button
               type="submit"
               disabled={isLoading || !query.trim()}
+              aria-label="Search"
+              onClick={() => inputRef.current?.focus()}
               className={`
                 flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 shadow-sm
                 ${!query.trim() || isLoading
@@ -196,7 +199,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         </div>
       </div>
 
-      {/* Location Error */}
       {locationError && (
         <div className="absolute mt-2 ml-6 text-xs font-medium text-red-500">
           Location access denied. Please enable permissions.

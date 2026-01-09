@@ -5,15 +5,28 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "KastoChha",
-  description: "AI-powered answer engine for local insights and travel in Nepal.",
+  title: "KastoChha - Nepal's Answer Engine",
+  description: "AI-powered answer engine for local insights and travel in Nepal..",
+
+ icons: {
+  icon: '/32.png', // The default icon
+  shortcut: '/favicon(2).ico', // The legacy fallback
+  apple: '/64.png', // For iOS/Mac devices
+  other: [
+    {
+      rel: 'icon',
+      url: '/64.png',
+      sizes: '64x64',
+    },
+  ],
+},
   
   // Social Media & Messaging Preview (WhatsApp, Facebook, etc.)
   openGraph: {
     title: "Habre Guide | KastoChha",
     description: "Your local AI companion for exploring the valley.",
     url: "https://kastochhanepal.com", // Update this with your real domain later
-    siteName: "KastoChha",
+    siteName: "KastoChha - Nepali Answer Engine",
     images: [
       {
         url: "https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/Gemini_Generated_Image_cyqqjucyqqjucyqq.png",
