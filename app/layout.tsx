@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // 1. FONT OPTIMIZATION
 // Using 'variable' allows us to use 'font-sans' in Tailwind without layout shift.
@@ -88,6 +89,8 @@ export default function RootLayout({
         <main className="flex-grow">
           {children}
         </main>
+
+         <SpeedInsights />
 
         {/* 5. DEFERRED SCHEMA 
             Placing this at the end of the body prevents it from blocking 
