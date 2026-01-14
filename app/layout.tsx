@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next"
 
 // 1. FONT OPTIMIZATION
 // Using 'variable' allows us to use 'font-sans' in Tailwind without layout shift.
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
     url: "https://kastochhanepal.com",
     siteName: "KastoChha",
     images: [{
-      url: "/KastoChha_SM_Image.png", // Next.js resolves this via metadataBase
+      url: "https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/KastoChha_SM_Image.png",
       width: 1200,
       height: 630,
       alt: "KastoChha Mascot Habre",
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "KastoChha - Nepal's Curiosity Engine",
     description: "The AI-powered answer engine for local insights.",
-    images: ["/KastoChha_SM_Image.png"],
+    images: ["https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/KastoChha_SM_Image.png"],
   },
 };
 
@@ -69,7 +70,7 @@ const jsonLd = {
     "name": "KastoChha",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://kastochhanepal.com/32.png"
+      "url": "https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/KastoChha_SM_Image.png"
     }
   }
 };
@@ -91,6 +92,7 @@ export default function RootLayout({
         </main>
 
          <SpeedInsights />
+         <Analytics />
 
         {/* 5. DEFERRED SCHEMA 
             Placing this at the end of the body prevents it from blocking 
