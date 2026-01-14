@@ -28,39 +28,39 @@ export const Typewriter = ({ text, onComplete }: { text: string; onComplete?: ()
     }, 35);
 
     return () => clearInterval(interval);
-  }, [words, onComplete]); 
+  }, [words, text, onComplete]); 
 
   return (
-    <div className="prose prose-slate max-w-none antialiased">
+    <div className="prose prose-slate max-w-none antialiased selection:bg-red-100 selection:text-[#FF4B4B]">
       <ReactMarkdown 
         remarkPlugins={[remarkGfm]}
         components={{
-          // ✅ FIX 1: Paragraph Spacing & Line Height for Nepali Script
+          // PREMIUM AI TYPOGRAPHY: Responsive sizes (15px mobile, 18px desktop)
           p: ({children}) => (
-            <p className="mb-8 last:mb-0 leading-[1.85] text-slate-700 text-lg font-medium whitespace-pre-wrap">
+            <p className="mb-6 last:mb-0 leading-relaxed md:leading-[1.8] text-slate-800 text-[15px] md:text-[18px] font-medium whitespace-pre-wrap">
               {children}
             </p>
           ),
-          // ✅ FIX 2: Style Section Headers (Matching the ### in your JSON)
+          // SECTION HEADERS: Slightly smaller for mobile clutter reduction
           h3: ({children}) => (
-            <h3 className="block mt-12 mb-6 text-2xl font-extrabold text-slate-900 tracking-tight border-l-4 border-[#4F93FF] pl-4 py-1 bg-blue-50/40 rounded-r-lg">
+            <h3 className="block mt-8 md:mt-12 mb-4 md:mb-6 text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight border-l-4 border-[#4F93FF] pl-4 py-1 bg-blue-50/40 rounded-r-lg">
               {children}
             </h3>
           ),
-          // ✅ FIX 3: Keep Bold Text (Hotel Names) Inline (Not as Blocks)
+          // BOLD TEXT: Clean blue underline style
           strong: ({children}) => (
-            <strong className="font-bold text-slate-900 border-b-2 border-blue-50 px-0.5">
+            <strong className="font-bold text-slate-900 border-b-2 border-blue-100 px-0.5">
               {children}
             </strong>
           ),
-          // ✅ FIX 4: Clean List Layout
+          // LISTS: Balanced spacing for mobile
           ul: ({children}) => (
-            <ul className="mb-8 space-y-4 list-disc list-inside text-slate-600">
+            <ul className="mb-6 space-y-3 md:space-y-4 list-disc list-inside text-slate-700">
               {children}
             </ul>
           ),
           li: ({children}) => (
-            <li className="leading-relaxed pl-2 text-slate-700">
+            <li className="leading-relaxed text-[15px] md:text-[18px] pl-2">
               {children}
             </li>
           ),
@@ -69,7 +69,7 @@ export const Typewriter = ({ text, onComplete }: { text: string; onComplete?: ()
         {currentText}
       </ReactMarkdown>
       {!isDone && (
-        <span className="inline-block w-1.5 h-5 ml-1 bg-[#4F93FF] animate-pulse align-middle rounded-full" />
+        <span className="inline-block w-2 h-5 md:h-6 ml-1 bg-[#4F93FF] animate-pulse align-middle rounded-full" />
       )}
     </div>
   );

@@ -43,8 +43,8 @@ export default function AboutPage() {
           {/* Section 1: The Brand Promise */}
           <section className="space-y-5 mb-10">
             <p className="text-gray-800 leading-relaxed text-sm md:text-base font-medium">
-              <strong>Kasto Chha</strong> is Nepal's AI-powered Answer Engine for people who want clear answers about Nepal. 
-              When someone asks "Kasto chha?" — about food, places, films, people, trends, or everyday experiences — we help them understand how it really is, without confusion or unnecessary searching.
+              <strong>KastoChha</strong> is Nepal's Curiosity Engine — an AI-powered Answer Engine built for people who want the ground reality, not just search results. 
+              We built KastoChha to specifically answer someone wondering "Kasto chha?" — about food, places, films, people, trends, or everyday experiences in Nepal.
             </p>
             <p className="text-gray-800 leading-relaxed text-sm md:text-base font-medium">
               From "Momo kasto chha?" to "Australia Jane Process Kasto Chha?", the platform is designed to combine local insight and AI intelligence to deliver answers that are simple, relevant, and easy to trust, that too in friendly Nepali conversational language.
@@ -123,7 +123,7 @@ export default function AboutPage() {
               KastoChha Platform
             </h2>
             <p className="text-gray-800 leading-relaxed text-sm md:text-base">
-              KastoChha is built as a Nepal-focused AI Answer Engine designed to deliver the ground reality before you decide to buy, eat, or travel. Our core strength lies in understanding local context, lived experience, and comparison-based intent behind "kasto chha" questions.
+              KastoChha is built as a Nepal-focused AI Answer Engine designed for the Curious Community Network to deliver the ground reality before you decide to buy, eat, or travel. Our core strength lies in understanding local context, lived experience, and comparison-based intent behind "kasto chha" questions.
             </p>
             <p className="text-gray-800 leading-relaxed text-sm md:text-base italic">
               At the heart of the platform is our interactive AI Answer Engine, which leverages advanced models to curate instant, personalized insights for "how is it" queries that traditional search results often miss.

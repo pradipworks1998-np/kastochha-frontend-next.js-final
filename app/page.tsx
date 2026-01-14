@@ -9,24 +9,12 @@ import { SearchResponse, FetchStatus, LanguageMode, Offer, Special_Updates } fro
 import { Footer } from '../components/Footer';
 import DiscordButton from '../components/DiscordButton';
 
-// --- DYNAMIC IMPORTS (The TBT Killers) ---
-
-// 1. HabreLoader: Only loads when status is LOADING
-const HabreLoader = dynamic(() => import('../components/HabreLoader').then(mod => mod.HabreLoader), {
-  ssr: false,
-});
-
-// 2. ResultsWrapper: Only loads when status is SUCCESS
-// We add a simple skeleton loader so the jump isn't jarring
+const HabreLoader = dynamic(() => import('../components/HabreLoader').then(mod => mod.HabreLoader), { ssr: false });
 const ResultsWrapper = dynamic(() => import('../components/ResultsWrapper').then(mod => mod.ResultsWrapper), {
   ssr: false,
   loading: () => <div className="h-64 w-full animate-pulse bg-slate-50 rounded-3xl mt-10" />
 });
-
-// 3. ErrorMessage: Only loads if an error actually happens
-const ErrorMessage = dynamic(() => import('../components/ErrorMessage'), { 
-  ssr: false 
-});
+const ErrorMessage = dynamic(() => import('../components/ErrorMessage'), { ssr: false });
 
 export default function Home() {
   const [status, setStatus] = useState<FetchStatus>(FetchStatus.IDLE);
@@ -40,23 +28,21 @@ export default function Home() {
     "Balen Ko Chasma 😎",
     "Aaja Ko Rashifal ko list ♈︎",
     "Kabaddi Film 🎬",
-    "Mahalxmisthaan ko Naan Pasal 🫓",
+    "Butwal Ko Fulki 🫓",
     "Mero Ex 👧/👦",
     "Rajesh Dai ko Haat 👊"
   ];
 
+  // FIX: Immediate state updates to prevent gradient flicker
   const handlePromptClick = (prompt: string) => {
     setInputQuery(prompt);
-    setStatus(FetchStatus.LOADING);
-    const input = document.querySelector<HTMLInputElement>('input[type="text"]');
-    input?.focus();
-
-    setTimeout(() => {
-      handleSearch(prompt, lastLang);
-    }, 0);
+    setStatus(FetchStatus.LOADING); // Trigger gradient state immediately
+    
+    // Use the prompt directly in handleSearch instead of waiting for state sync
+    handleSearch(prompt, lastLang);
   };
 
-  const handleSearch = async (query: string, lang: LanguageMode, location?: string) => {
+  const handleSearch = async (query: string, lang: LanguageMode) => {
     if (!query.trim()) {
       setError('Please enter a query.');
       setStatus(FetchStatus.ERROR);
@@ -68,29 +54,17 @@ export default function Home() {
     setLastLang(lang);
 
     try {
-      const result = await performSearch({ query, languageMode: lang, location });
-
-      if ((result as any).offers?.length) {
-        result.offer = (result as any).offers[0] as Offer;
-      }
-      if ((result as any).special_updates?.length) {
-        result.special_update = (result as any).special_updates[0] as Special_Updates;
-      }
-      if (Array.isArray((result as any).sources)) {
-        result.sources = (result as any).sources.map((s: any) => ({
-          maps: s.maps,
-          web: s.web,
-          retrievedContext: s.retrievedContext,
-        }));
-      }
-
+      const result = await performSearch({ query, languageMode: lang });
+      
+      // Data normalization logic
+      if ((result as any).offers?.length) result.offer = (result as any).offers[0];
+      if ((result as any).special_updates?.length) result.special_update = (result as any).special_updates[0];
+      
       setData(result as SearchResponse);
       setStatus(FetchStatus.SUCCESS);
     } catch (err) {
-      console.error('Search failed:', err);
       setError('Something went wrong. Please try again.');
       setStatus(FetchStatus.ERROR);
-      setData(null);
     }
   };
 
@@ -103,20 +77,20 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (data?.answer) {
-      setDisplayedAnswer(data.answer);
-    }
+    if (data?.answer) setDisplayedAnswer(data.answer);
   }, [data?.answer]);
 
   const isIdle = status === FetchStatus.IDLE;
 
   return (
     <div className="flex flex-col min-h-screen bg-transparent text-slate-900 font-sans">
-      <main className="flex-grow flex flex-col px-4 pb-50 relative w-full max-w-5xl mx-auto">
-
-        <div
-          className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${
-            isIdle ? 'min-h-[60vh] justify-center' : 'mt-8'
+      {/* Reduced pb-50 to pb-20 for less empty space on mobile */}
+      <main className="flex-grow flex flex-col px-4 pb-20 relative w-full max-w-5xl mx-auto">
+        
+        <div className={`w-full transition-all duration-700 ease-in-out flex flex-col items-center ${
+            isIdle 
+              ? 'min-h-[75vh] justify-center md:min-h-0 md:justify-start md:mt-32' 
+              : 'mt-4 md:mt-10' // Reduced mobile margin from mt-8 to mt-4
           }`}
         >
           <Header
@@ -136,42 +110,36 @@ export default function Home() {
           />
 
           {isIdle && (
-            <div className="mt-12 flex flex-wrap justify-center gap-3">
-              {placeholderPrompts.map((text) => (
-                <button
-                  key={text}
-                  onClick={() => handlePromptClick(text)}
-                  className="bg-white border border-gray-300 text-gray-800 px-5 py-2 rounded-full shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-200 cursor-pointer"
-                >
-                  {text}
-                </button>
-              ))}
+            <div className="mt-8 md:mt-12 w-full overflow-x-auto no-scrollbar touch-pan-x">
+              <div className="flex flex-nowrap md:flex-wrap md:justify-center gap-2 md:gap-3 px-2 md:px-0">
+                {placeholderPrompts.map((text) => (
+                  <button
+                    key={text}
+                    onClick={() => handlePromptClick(text)}
+                    className="whitespace-nowrap bg-white border border-gray-300 text-gray-800 px-4 py-1.5 md:py-2 text-[13px] md:text-base rounded-full shadow-sm hover:shadow-md active:scale-95 transition-all cursor-pointer"
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* --- CONDITIONAL RESULTS SECTION --- */}
         {!isIdle && (
-          <div className="w-full max-w-4xl mx-auto pb-20 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
-            
-            {/* 1. Error State */}
+          <div className="w-full max-w-4xl mx-auto pb-0 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-forwards">
             {status === FetchStatus.ERROR && <ErrorMessage message={error ?? ''} />}
-            
-            {/* 2. Loading State (Dancing Habre) */}
             {status === FetchStatus.LOADING && (
-              <div className="py-10">
+              <div className="py-6 md:py-10">
                 <HabreLoader />
               </div>
             )}
-
-            {/* 3. Success State (AI Results) */}
             {status === FetchStatus.SUCCESS && data && (
               <ResultsWrapper data={data} displayedAnswer={displayedAnswer} />
             )}
           </div>
         )}
       </main>
-
       <Footer />
       <DiscordButton />
     </div>

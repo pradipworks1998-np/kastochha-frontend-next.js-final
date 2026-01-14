@@ -64,7 +64,7 @@ export const Footer: React.FC = () => {
 
         {/* Right on desktop / Bottom on mobile: copyright */}
         <div className="order-3 sm:order-3 w-full sm:w-auto text-center sm:text-right mt-4 sm:mt-0">
-          © 2026 KastoChha – Nepal's Answer Engine
+          © 2026 KastoChha – Nepal's Curiosity Engine
         </div>
 
       </div>

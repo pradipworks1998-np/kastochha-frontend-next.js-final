@@ -70,7 +70,7 @@ export default function ContactPage() {
               </ul>
 
               <a 
-                href="https://discord.gg/yourlink" // Replace with your actual link
+                href="https://discord.gg/H4jkBz9tg6" 
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-8 py-3 bg-[#5865F2] text-white font-bold rounded-full hover:bg-[#4752C4] transition-all transform hover:scale-105 shadow-md"
@@ -90,12 +90,12 @@ export default function ContactPage() {
               </p>
               
               <a
-                href="mailto:kastochhaofficial@gmail.com"
+                href="mailto:contact@kastochhanepal.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center p-4 bg-gray-50 rounded-xl border border-gray-200 hover:border-blue-300 transition-colors w-full md:w-max"
               >
-                <span className="font-mono text-[#1E40AF] font-bold">kastochhaofficial@gmail.com</span>
+                <span className="font-mono text-[#1E40AF] font-bold">contact@kastochhanepal.com</span>
                 <div className="ml-4 p-2 bg-white rounded-full group-hover:bg-red-50 transition-colors shadow-sm">
                   <EnvelopeIcon className="w-5 h-5 text-red-500" />
                 </div>
