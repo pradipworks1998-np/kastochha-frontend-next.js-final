@@ -10,6 +10,6 @@ export default function robots(): MetadataRoute.Robots {
         '/*?_rsc=*',   // Prevents indexing Next.js internal data fetching 
       ],
     },
-    sitemap: 'https://kastochhanepal.com/sitemap.xml',
+    sitemap: 'https://www.kastochhanepal.com/sitemap.xml',
   }
 }

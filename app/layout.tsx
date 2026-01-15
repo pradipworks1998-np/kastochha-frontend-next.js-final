@@ -15,7 +15,7 @@ const inter = Inter({
 
 // 2. SEO & PERFORMANCE METADATA
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kastochhanepal.com"),
+  metadataBase: new URL("https://www.kastochhanepal.com"),
   title: {
     default: "KastoChha - Nepal's Curiosity Engine",
     template: "%s | KastoChha"
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "KastoChha - Nepal's Curious Community Network",
     description: "The Answer Engine for Nepali curiosity.",
-    url: "https://kastochhanepal.com",
+    url: "https://www.kastochhanepal.com",
     siteName: "KastoChha",
     images: [{
       url: "https://auopgtcysaaexozjgcbh.supabase.co/storage/v1/object/public/Assets/KastoChha_SM_Image.png",
@@ -63,7 +63,7 @@ const jsonLd = {
   "@type": "WebSite",
   "name": "KastoChha",
   "alternateName": "Nepal's Curiosity Engine",
-  "url": "https://kastochhanepal.com",
+  "url": "https://www.kastochhanepal.com",
   "description": "The AI-powered answer engine for local insights, culture, and travel in Nepal.",
   "publisher": {
     "@type": "Organization",
