@@ -27,7 +27,7 @@ async function getBlogPosts() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://kastochhanepal.com'
+  const baseUrl = 'https://www.kastochhanepal.com'
   
   // Base Pages
   const staticPages = [
