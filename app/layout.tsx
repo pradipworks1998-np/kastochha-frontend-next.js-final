@@ -25,12 +25,6 @@ export const metadata: Metadata = {
   },
   description: "The AI-assisted answer engine for Nepal's Curious Community Network, delivering instant answers on local insights, culture, and travel.",
 
-  // ✅ Canonical Fix: Resolves to https://www.kastochhanepal.com/ 
-  // and safely allows overrides on dynamic blog pages.
-  alternates: {
-    canonical: "/",
-  },
-
   // ✅ Search Result Favicon (Google's 48px rule)
   icons: {
     icon: [
