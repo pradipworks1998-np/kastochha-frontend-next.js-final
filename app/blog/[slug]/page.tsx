@@ -59,12 +59,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return { title: "Post Not Found" };
 
   const { title, metaTitle, metaDescription, featuredImage } = post.fields as any;
-  const siteUrl = "https://kastochhanepal.com";
+  const siteUrl = "https://www.kastochhanepal.com";
   const ogImage = featuredImage?.fields?.file?.url ? `https:${featuredImage.fields.file.url}` : `${siteUrl}/og-fallback.jpg`;
 
   return {
     title: `${metaTitle || title} | KastoChha`,
     description: metaDescription || "Expert local insights from Nepal.",
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: metaTitle || title,
       description: metaDescription || "Expert local insights from Nepal.",
@@ -94,8 +97,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const manualRelated = (fields as any).relatedPost || [];
   const sidebarPosts = manualRelated.length > 0 ? manualRelated : latestPostsFallback;
   const headings = extractHeadings(fields.body?.content);
-  const shareUrl = `https://kastochhanepal.com/blog/${slug}`;
-  const siteUrl = "https://kastochhanepal.com";
+  const siteUrl = "https://www.kastochhanepal.com";
+  const shareUrl = `${siteUrl}/blog/${slug}`;
 
   // --- Schema Logic ---
   const faqData = (fields as any).faq; 
@@ -173,7 +176,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <header className="max-w-4xl mx-auto text-left mb-12">
           <nav className="mb-4 flex flex-wrap items-center justify-between gap-4">
              <Link href="/blog" className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] hover:underline">
-               ← BACK TO ALL STORIES
+               â† BACK TO ALL STORIES
              </Link>
              <div className="flex gap-2">
                {(fields as any).categories?.map((cat: string) => (

@@ -6,8 +6,8 @@ import { Metadata } from "next";
 
 // Modern Next.js SEO Metadata
 export const metadata: Metadata = {
-  title: "About KastoChha | Nepal's AI-Powered Answer Engine",
-  description: "Kasto Chha: Nepal's AI-powered answer engine. From 'Momo kasto chha?' to local trends, we provide instant, reliable answers without the scroll.",
+  title: "About KastoChha | Nepal's AI-Assisted Answer Engine",
+  description: "Kasto Chha: Nepal's AI-Assisted answer engine. From 'Momo kasto chha?' to local trends, we provide instant, reliable answers without the scroll.",
 };
 
 export default function AboutPage() {
@@ -16,8 +16,6 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen pt-4 md:pt-8 bg-white font-sans">
       <HeaderWrapper />
-
-      <h1 className="sr-only">KastoChha | Nepal's First AI Answer Engine</h1>
 
       {/* Hero Banner - NO OPACITY/OVERLAY */}
       <div className="px-4 sm:px-6 md:px-12 lg:px-16 mt-4">

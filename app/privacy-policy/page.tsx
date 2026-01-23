@@ -16,8 +16,6 @@ export default function PrivacyPage() {
     <div className="flex flex-col min-h-screen pt-4 md:pt-8 bg-white font-sans">
       <HeaderWrapper />
 
-      <h1 className="sr-only">Privacy Policy</h1>
-
       {/* Hero Banner */}
       <div className="px-4 sm:px-6 md:px-12 lg:px-16 mt-4">
         <div
@@ -36,9 +34,9 @@ export default function PrivacyPage() {
           
           <div className="flex items-center gap-3 mb-6">
             <ShieldCheckIcon className="w-8 h-8 text-[#1E40AF]" />
-            <h2 className={`text-2xl md:text-3xl font-black text-transparent bg-clip-text ${brandGradient}`}>
+            <h1 className={`text-2xl md:text-3xl font-black text-transparent bg-clip-text ${brandGradient}`}>
               Privacy by Design
-            </h2>
+            </h1>
           </div>
 
           <section className="space-y-8">

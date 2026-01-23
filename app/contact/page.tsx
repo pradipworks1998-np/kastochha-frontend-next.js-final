@@ -6,7 +6,7 @@ import { Metadata } from "next";
 
 // Modern Next.js SEO Metadata
 export const metadata: Metadata = {
-  title: "Contact Us | Kasto Chha - Join the Community",
+  title: "Contact Us | KastoChha - Join the Community",
   description: "Have a question or feedback? Connect with the Kasto Chha team via Discord or Email. Join Nepal's growing AI community.",
 };
 
@@ -16,9 +16,6 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen pt-4 md:pt-8 bg-white font-sans">
       <HeaderWrapper />
-
-      {/* Hidden H1 for SEO */}
-      <h1 className="sr-only">Contact Kasto Chha Team</h1>
 
       {/* Hero Banner Section - 100% Brightness & Restored About Page Image */}
       <div className="px-4 sm:px-6 md:px-12 lg:px-16 mt-4">
@@ -36,9 +33,9 @@ export default function ContactPage() {
       <div className="px-4 sm:px-6 md:px-12 lg:px-16">
         <main className="relative max-w-3xl mx-auto -mt-10 bg-white border border-gray-100 rounded-2xl shadow-xl p-6 sm:p-10 md:p-12 z-20 mb-16">
           
-          <h2 className={`text-2xl md:text-3xl font-black mb-6 text-transparent bg-clip-text ${brandGradient}`}>
+          <h1 className={`text-2xl md:text-3xl font-black mb-6 text-transparent bg-clip-text ${brandGradient}`}>
             We Love Hearing From You!
-          </h2>
+          </h1>
 
           <section className="space-y-8">
             {/* Discord Focus Section */}
