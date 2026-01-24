@@ -176,7 +176,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <header className="max-w-4xl mx-auto text-left mb-12">
           <nav className="mb-4 flex flex-wrap items-center justify-between gap-4">
              <Link href="/blog" className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] hover:underline">
-               â† BACK TO ALL STORIES
+              BACK TO ALL STORIES
              </Link>
              <div className="flex gap-2">
                {(fields as any).categories?.map((cat: string) => (
